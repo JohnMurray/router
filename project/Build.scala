@@ -2,34 +2,46 @@ import sbt._
 import Keys._
 
 
-object BuildSettings {
-  val buildOrganization = "johnmurray.io"
-  val appName           = "router"
-  val buildVersion      = "0.0.1-SNAPSHOT"
-  val buildScalaVersion = "2.10.3"
-
-  val buildSettings = Defaults.defaultSettings ++ Seq (
-    organization := buildOrganization,
-    version      := buildVersion,
-    scalaVersion := buildScalaVersion
-  )
-}
-
 object Resolvers {
-
+   val sprayResolver = "spray repo" at "http://repo.spray.io"
 }
 
 object Dependencies {
+   val akkaV = "2.3.0"
+   val sprayV = "1.3.1"
 
+   val appDependencies = Seq(
+      "com.typesafe.akka"   %%  "akka-actor"   % akkaV,
+      "com.typesafe.akka"   %%  "akka-testkit" % akkaV    % "test",
+      "io.spray"             %  "spray-can"    % sprayV,
+      "org.specs2"          %%  "specs2"       % "2.3.10" % "test"
+   )
+}
+
+object BuildSettings {
+   val buildOrganization = "johnmurray.io"
+   val appName = "router"
+   val buildVersion = "0.0.1-SNAPSHOT"
+   val buildScalaVersion = "2.10.3"
+
+   import Resolvers._
+   import Dependencies._
+
+   val buildSettings = Defaults.defaultSettings ++ Seq(
+      organization        := buildOrganization,
+      version             := buildVersion,
+      scalaVersion        := buildScalaVersion,
+      resolvers           += sprayResolver,
+      libraryDependencies := appDependencies
+   )
 }
 
 object ApplicationBuild extends Build {
-  import BuildSettings._
-  import Resolvers._
-  import Dependencies._
 
-  lazy val main = Project(
-    "router",
-    file("."),
-    settings = buildSettings)
+   import BuildSettings._
+
+   lazy val main = Project(
+      appName,
+      file("."),
+      settings = buildSettings)
 }
