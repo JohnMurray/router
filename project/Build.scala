@@ -23,6 +23,7 @@ object BuildSettings {
    val appName = "router"
    val buildVersion = "0.0.1-SNAPSHOT"
    val buildScalaVersion = "2.10.3"
+   val buildScalaOptions = Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
    import Resolvers._
    import Dependencies._
@@ -32,7 +33,8 @@ object BuildSettings {
       version             := buildVersion,
       scalaVersion        := buildScalaVersion,
       resolvers           += sprayResolver,
-      libraryDependencies := appDependencies
+      libraryDependencies := appDependencies,
+      scalacOptions       := buildScalaOptions
    )
 }
 
