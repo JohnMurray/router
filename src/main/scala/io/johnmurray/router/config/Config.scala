@@ -6,4 +6,4 @@ package io.johnmurray.router.config
  *
  * Represents all configuration for the project
  */
-case class Config(port: Int, matchers: List[MatcherConfig])
+case class Config(port: Int, matchersConf: String)

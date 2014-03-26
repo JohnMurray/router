@@ -1,3 +1,5 @@
 {
-    "port": 4567
+    "port": 4567,
+
+    "matchersConf": "/usr/etc/router-matchers.json"
 }
