@@ -9,4 +9,9 @@ package io.johnmurray.router.config
  */
 object RouterJsonProtocols {
 
+  /*
+   * See readme at: https://github.com/spray/spray-json
+   * for details on what to put here
+   */
+
 }
