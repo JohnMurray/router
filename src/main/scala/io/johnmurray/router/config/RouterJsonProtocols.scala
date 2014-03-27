@@ -1,5 +1,8 @@
 package io.johnmurray.router.config
 
+import spray.json._
+import DefaultJsonProtocol._
+
 /**
  * Author: John Murray <jmurray@appnexus.com>
  * Date:   3/26/14
@@ -9,9 +12,6 @@ package io.johnmurray.router.config
  */
 object RouterJsonProtocols {
 
-  /*
-   * See readme at: https://github.com/spray/spray-json
-   * for details on what to put here
-   */
+   implicit val configFormat = jsonFormat2(Config)
 
 }
