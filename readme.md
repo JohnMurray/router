@@ -1,5 +1,7 @@
 # router
 
+[![Build Status](https://travis-ci.org/JohnMurray/router.svg?branch=master)](https://travis-ci.org/JohnMurray/router)
+
 An application-level router written in Spray and Scala. This project
 is still in the early development phases and not ready for production
 usage. Please check back later or email me at "me at johnmurray dot
