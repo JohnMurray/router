@@ -41,4 +41,10 @@ object Boot extends App {
    /*
     * Start the http handler actors and bind themselves to the listeners
     */
+
+
+   /*
+    * Shutdown
+    */
+   actorSystem.shutdown()
 }

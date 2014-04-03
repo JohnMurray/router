@@ -35,7 +35,9 @@ class ConfigLoaderActor extends Actor {
             log.info("Scheduled route-loading")
          }
          catch {
-            case t: Throwable => sender ! ConfigLoadFailed
+            case t: Throwable =>
+               log.error(s"Could not load config: $t")
+               sender ! ConfigLoadFailed
          }
 
       case ReLoadRoutes =>
