@@ -12,7 +12,7 @@ case class Config(port: Int,
 
    def merge(other: OverrideConfig) : Config = {
       copy(port = other.port.getOrElse(port),
-           matcherConfigurationLocation = other.matcherConfigurationLocation.getOrElse(matcherConfigurationLocation)
+           matcherConfigurationLocation = other.matcherConfigurationLocation.getOrElse(matcherConfigurationLocation))
    }
 }
 
