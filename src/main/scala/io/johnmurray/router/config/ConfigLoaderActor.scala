@@ -6,6 +6,7 @@ import org.parboiled.errors.ParsingException
 import spray.json.JsonParser
 import RouterJsonProtocols._
 import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
  * Author: John Murray <jmurray@appnexus.com>
@@ -34,7 +35,7 @@ class ConfigLoaderActor extends Actor {
             log.info("Scheduled route-loading")
          }
          catch {
-            case Throwable => sender ! ConfigLoadFailed
+            case t: Throwable => sender ! ConfigLoadFailed
          }
 
       case ReLoadRoutes =>
