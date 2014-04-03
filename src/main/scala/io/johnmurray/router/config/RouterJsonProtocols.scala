@@ -13,5 +13,6 @@ import DefaultJsonProtocol._
 object RouterJsonProtocols {
 
    implicit val configFormat = jsonFormat3(Config)
+   implicit val overrideConfigFormat = jsonFormat2(OverrideConfig)
 
 }

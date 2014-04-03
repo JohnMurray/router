@@ -26,7 +26,7 @@ object Boot extends App {
     * Load the config and set the config-loader-actor's schedule to start running
     */
    val configLoadResult = Await.result(
-      Patterns.ask(configLoader, (LoadConfig, true), 500.milliseconds),
+      Patterns.ask(configLoader, LoadConfig, 500.milliseconds),
       500.milliseconds)
    configLoadResult match {
       case ConfigLoadFailed => {

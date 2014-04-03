@@ -8,4 +8,18 @@ package io.johnmurray.router.config
  */
 case class Config(port: Int,
                   matcherConfigurationLocation: String,
-                  overrideConfigurationLocation: String)
+                  overrideConfigurationLocation: String) {
+
+   def merge(other: OverrideConfig) : Config = {
+      copy(port = other.port.getOrElse(port),
+           matcherConfigurationLocation = other.matcherConfigurationLocation.getOrElse(matcherConfigurationLocation)
+   }
+}
+
+/**
+ * Represents the optional "override" configurations that can be given by
+ * an external config
+ */
+case class OverrideConfig(port: Option[Int],
+                          matcherConfigurationLocation: Option[String])
+
