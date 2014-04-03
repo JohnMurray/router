@@ -81,8 +81,11 @@ class ConfigLoaderActor extends Actor {
    }
 
 
-   /*
+   /**
     * Returns the location of the override config if it exists (on the Filesystem)
+    *
+    * @param config The currently (default) config
+    * @return       A path to the file if it exists and is readable, None otherwise
     */
    def getOverrideConfigLocation(config: Config): Option[String] = {
       val path = sys.props.get("overrideConfLocation").getOrElse(config.overrideConfigurationLocation)
