@@ -18,32 +18,41 @@ class ConfigLoaderSpec extends Specification {
    val actor = actorRef.underlyingActor
 
    "config loader actor" should {
-      "load base configuration" in {
-         actor.loadBaseConfig must not(throwA[Throwable])
+
+      "loading base config" should {
+         "load base configuration" in {
+            actor.loadBaseConfig must not(throwA[Throwable])
+         }
+
+         "return None when override configuration is non-existent" in {
+            sys.props += "overrideConfLocation" -> "/no/where/good.json"
+            actor.getOverrideConfigLocation(actor.loadBaseConfig) must_== None
+         }
+
+         step { sys.props -= "overrideConfLocation" }
+
+         "return Some(string) when override configuartion exists and is readable" in {
+            val testLocation = getClass.getClassLoader.getResource("router.json").getFile
+            sys.props += "overrideConfLocation" -> testLocation
+
+            actor.getOverrideConfigLocation(actor.loadBaseConfig) must_== Some(testLocation)
+         }
+
+         step { sys.props -= "overrideConfLocation" }
+
+         "return combined config if available" in {
+            val testLocation = getClass.getClassLoader.getResource("router.json").getFile
+            sys.props += "overrideConfLocation" -> testLocation
+
+            val config = actor.loadBaseConfig
+            config.port must_== 1
+         }
       }
 
-      "return None when override configuration is non-existent" in {
-         sys.props += "overrideConfLocation" -> "/no/where/good.json"
-         actor.getOverrideConfigLocation(actor.loadBaseConfig) must_== None
-      }
-
-      step { sys.props -= "overrideConfLocation" }
-
-      "return Some(string) when override configuartion exists and is readable" in {
-         val testLocation = getClass.getClassLoader.getResource("router.json").getFile
-         sys.props += "overrideConfLocation" -> testLocation
-
-         actor.getOverrideConfigLocation(actor.loadBaseConfig) must_== Some(testLocation)
-      }
-
-      step { sys.props -= "overrideConfLocation" }
-
-      "return combined config if available" in {
-         val testLocation = getClass.getClassLoader.getResource("router.json").getFile
-         sys.props += "overrideConfLocation" -> testLocation
-
-         val config = actor.loadBaseConfig
-         config.port must_== 1
+      "loading route config" should {
+         "placeholder" in {
+            1 must_== 1
+         }
       }
    }
 
