@@ -10,4 +10,15 @@ package io.johnmurray.router.route
 case class Route(matchPath: String,
                  destinationHost: String,
                  destinationPort: Int = 80,
-                 destinationPath: String = matchPath)
+                 destinationPath: String) {
+
+}
+
+
+object Route {
+   def apply(matchPath: String, destinationHost: String) =
+      apply(matchPath = matchPath, destinationHost = destinationHost, destinationPath = matchPath)
+
+   def apply(matchPath: String, destinationHost: String, destinationPort: Int) =
+      apply(matchPath = matchPath, destinationHost = destinationHost, destinationPort = destinationPort, destinationPath = matchPath)
+}
