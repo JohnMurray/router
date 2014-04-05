@@ -1,6 +1,6 @@
 package io.johnmurray.router.config
 
-import akka.actor.Actor
+import akka.actor.{Cancellable, Actor}
 import akka.event.Logging
 import org.parboiled.errors.ParsingException
 import spray.json.JsonParser
@@ -24,6 +24,7 @@ class ConfigLoaderActor extends Actor {
    import ConfigLoaderActor._
 
    val log = Logging(context.system, this)
+   var routeSchedule : Option[Cancellable] = None
 
    def receive = {
       case LoadConfig =>
@@ -31,8 +32,12 @@ class ConfigLoaderActor extends Actor {
          try {
             ConfigStore.config = loadBaseConfig
             sender ! ConfigLoaded
-            context.system.scheduler.schedule(0.seconds, 30.seconds, self, ReLoadRoutes)
-            log.info("Scheduled route-loading")
+
+            if (routeSchedule.isEmpty || routeSchedule.exists(_.isCancelled)) {
+               log.info("Scheduled route-loading")
+               routeSchedule = Some(
+                  context.system.scheduler.schedule(0.seconds, 30.seconds, self, ReLoadRoutes))
+            }
          }
          catch {
             case t: Throwable =>

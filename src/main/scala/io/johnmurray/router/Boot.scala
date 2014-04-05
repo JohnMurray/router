@@ -36,7 +36,6 @@ object Boot extends App {
       }
       case _ =>
    }
-   actorSystem.scheduler.schedule(10.seconds, 10.seconds, configLoader, LoadConfig)
 
 
    /*
