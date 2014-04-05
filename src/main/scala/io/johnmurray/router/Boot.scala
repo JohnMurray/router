@@ -9,6 +9,7 @@ import ConfigLoaderActor._
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Await
+import io.johnmurray.router.handler.HttpHandler
 
 /**
  * Author: John Murray <jmurray@appnexus.com>
@@ -41,10 +42,6 @@ object Boot extends App {
    /*
     * Start the http handler actors and bind themselves to the listeners
     */
+   val handler = actorSystem.actorOf(Props[HttpHandler], "http-handler")
 
-
-   /*
-    * Shutdown
-    */
-   actorSystem.shutdown()
 }
