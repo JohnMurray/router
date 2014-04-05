@@ -34,6 +34,8 @@ class HttpHandler extends Actor {
       case Http.Connected(_, _) =>
          sender ! Http.Register(self)
 
+      case Http.PeerClosed =>
+
       case Http.Bound(address) =>
          log.info(s"Bound at $address")
 
