@@ -7,12 +7,12 @@ package io.johnmurray.router.config
  * Represents all configuration for the project
  */
 case class Config(port: Int,
-                  matcherConfigurationLocation: String,
+                  routeConfigurationLocation: String,
                   overrideConfigurationLocation: String) {
 
    def merge(other: OverrideConfig) : Config = {
       copy(port = other.port.getOrElse(port),
-           matcherConfigurationLocation = other.matcherConfigurationLocation.getOrElse(matcherConfigurationLocation))
+           routeConfigurationLocation = other.routeConfigurationLocation.getOrElse(routeConfigurationLocation))
    }
 }
 
@@ -21,5 +21,5 @@ case class Config(port: Int,
  * an external config
  */
 case class OverrideConfig(port: Option[Int],
-                          matcherConfigurationLocation: Option[String])
+                          routeConfigurationLocation: Option[String])
 
