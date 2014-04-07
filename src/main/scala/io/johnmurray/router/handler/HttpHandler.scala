@@ -13,7 +13,11 @@ import io.johnmurray.router.config.ConfigStore
  * Author: John Murray <jmurray@appnexus.com>
  * Date:   4/4/14
  *
- * DESCRIPTION
+ * Acts as the main handler for all HTTP requests.
+ *
+ * Currently this class only responds to "/ping" and responds w/ a "PONG"
+ * message. This is for testing. This will change in the future when actual
+ * proxy-support is added.
  */
 class HttpHandler extends Actor {
 
