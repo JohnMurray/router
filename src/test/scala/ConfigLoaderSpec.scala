@@ -57,9 +57,9 @@ class ConfigLoaderSpec extends Specification {
             actor.routeSchedule must beSome[Cancellable]
          }
 
-         "not set schedule for defined route-loading" in {
-            actor.routeSchedule = None
+         step { actor.routeSchedule = None }
 
+         "not set schedule for defined route-loading" in {
             actor.receive(LoadConfig)
             val schedule = actor.routeSchedule
             actor.receive(LoadConfig)
