@@ -18,6 +18,8 @@ class ConfigLoaderSpec extends Specification {
    val actorRef = TestActorRef(new ConfigLoaderActor)
    val actor = actorRef.underlyingActor
 
+   sequential
+
    "config loader actor" should {
 
       "loading base config" should {
