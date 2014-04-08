@@ -2,6 +2,7 @@ package io.johnmurray.router.config
 
 import spray.json._
 import DefaultJsonProtocol._
+import io.johnmurray.router.route.Route
 
 /**
  * Author: John Murray <jmurray@appnexus.com>

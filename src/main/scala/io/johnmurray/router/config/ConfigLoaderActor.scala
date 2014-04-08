@@ -7,6 +7,7 @@ import spray.json.JsonParser
 import RouterJsonProtocols._
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
+import io.johnmurray.router.route.Route
 
 /**
  * Author: John Murray <jmurray@appnexus.com>
@@ -50,6 +51,19 @@ class ConfigLoaderActor extends Actor {
 
       case any =>
          log.warning(s"Unknown message received to config loader actor: $any")
+   }
+
+
+   /**
+    * Given the base-config, find the routes file, parse it, and return a list of
+    * route-objects.
+    *
+    * @param baseConfig The base-config containing the locaiton of the route-config
+    * @return           A list of Route objects
+    */
+   def loadRouteConfig(baseConfig: Config): List[Route] = {
+      // TODO: Implement method
+      Nil
    }
 
 

@@ -1,8 +1,9 @@
-import akka.actor.ActorSystem
+import akka.actor.{Cancellable, ActorSystem}
 import akka.testkit._
 
 import io.johnmurray.router.config.ConfigLoaderActor
 
+import io.johnmurray.router.config.ConfigLoaderActor.LoadConfig
 import org.specs2.mutable.Specification
 
 /**
@@ -16,6 +17,8 @@ class ConfigLoaderSpec extends Specification {
    implicit val actorSystem = ActorSystem("config-loader-spec-system")
    val actorRef = TestActorRef(new ConfigLoaderActor)
    val actor = actorRef.underlyingActor
+
+   sequential
 
    "config loader actor" should {
 
@@ -46,6 +49,24 @@ class ConfigLoaderSpec extends Specification {
 
             val config = actor.loadBaseConfig
             config.port must_== 1
+         }
+
+         "set schedule for non-defined route-loading" in {
+            actor.routeSchedule = None
+            actor.receive(LoadConfig)
+            actor.routeSchedule must beSome[Cancellable]
+         }
+
+         step { actor.routeSchedule = None }
+
+         "not set schedule for defined route-loading" in {
+            actor.receive(LoadConfig)
+            val schedule = actor.routeSchedule
+            actor.receive(LoadConfig)
+
+            schedule must beSome[Cancellable]
+            actor.routeSchedule must beSome[Cancellable]
+            schedule must_== actor.routeSchedule
          }
       }
 
