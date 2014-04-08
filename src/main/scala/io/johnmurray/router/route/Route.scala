@@ -12,6 +12,21 @@ case class Route(matchPath: String,
                  destinationPath: String,
                  destinationPort: Int = 80) {
 
+   /**
+    * Because we want to check equality based on the matchPath (to ensure
+    * uniqueness based on route-paths). If we are able to define multiple
+    * routes for the same match-path, it would be hard to do the matching
+    * when the request came in because multiples would be returned. That
+    * just doesn't make sense at the moment.
+    *
+    * @param that The other route to match against
+    * @return
+    */
+   override def equals(that: Any) : Boolean = that match {
+      case r: Route => this.matchPath == r.matchPath
+      case _        => false
+   }
+
 }
 
 
