@@ -7,7 +7,6 @@ import io.johnmurray.router.config.ConfigLoaderActor
 import ConfigLoaderActor._
 
 import scala.concurrent.duration._
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Await
 import io.johnmurray.router.handler.HttpHandler
 
