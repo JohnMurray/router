@@ -1,9 +1,10 @@
 import akka.actor.{Cancellable, ActorSystem}
 import akka.testkit._
 
-import io.johnmurray.router.config.ConfigLoaderActor
+import io.johnmurray.router.config.{ConfigStore, ConfigLoaderActor}
 
-import io.johnmurray.router.config.ConfigLoaderActor.LoadConfig
+import io.johnmurray.router.config.ConfigLoaderActor.{ReLoadRoutes, LoadConfig}
+import io.johnmurray.router.route.Route
 import org.specs2.mutable.Specification
 
 /**
@@ -15,12 +16,12 @@ import org.specs2.mutable.Specification
 class ConfigLoaderSpec extends Specification {
 
    implicit val actorSystem = ActorSystem("config-loader-spec-system")
-   val actorRef = TestActorRef(new ConfigLoaderActor)
-   val actor = actorRef.underlyingActor
 
    sequential
 
    "config loader actor" should {
+
+      val actor = TestActorRef(new ConfigLoaderActor).underlyingActor
 
       "loading base config" should {
          "load base configuration" in {
@@ -71,8 +72,35 @@ class ConfigLoaderSpec extends Specification {
       }
 
       "loading route config" should {
-         "placeholder" in {
-            1 must_== 1
+
+         val actor = TestActorRef(new ConfigLoaderActor).underlyingActor
+
+         "load list of routes if route-file available" in {
+            actor.receive(LoadConfig)
+            ConfigStore.config = ConfigStore.config.copy(
+               routeConfigurationLocation = getClass.getClassLoader.getResource("router-routes.json").getFile)
+
+            actor.loadRouteConfig(ConfigStore.config) must have size 1
+         }
+
+         "return empty routes if route-file does not exist" in {
+            actor.receive(LoadConfig)
+            ConfigStore.config = ConfigStore.config.copy(
+               routeConfigurationLocation = "/non/existent/router/file.json")
+
+            actor.loadRouteConfig(ConfigStore.config) must_== Nil
+         }
+
+         "build route matcher in config-store if route-file available" in {
+            actor.receive(LoadConfig)
+            ConfigStore.config = ConfigStore.config.copy(
+               routeConfigurationLocation = getClass.getClassLoader.getResource("router-routes.json").getFile)
+
+            val routes = actor.loadRouteConfig(ConfigStore.config)
+            actor.receive(ReLoadRoutes)
+
+            ConfigStore.routeMatcher.routes must have size 1
+            ConfigStore.routeMatcher.find(routes.head.matchPath) must beSome[Route]
          }
       }
    }

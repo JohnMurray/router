@@ -17,7 +17,7 @@ import scala.collection.concurrent.TrieMap
  * @param routes        The routes in which to match against
  * @param caseSensitive Flag to set case-sensitive (or not) matching
  */
-class RouteMatcher(val routes : Set[Route] = Set.empty, val caseSensitive: Boolean = false) {
+case class RouteMatcher(routes : Set[Route] = Set.empty, caseSensitive: Boolean = false) {
    private val routeMap = new TrieMap[String, Route]()
 
    routes.map{ r =>

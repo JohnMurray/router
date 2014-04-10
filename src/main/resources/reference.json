@@ -1,7 +1,7 @@
 {
     "port": 4567,
 
-    "routeConfigurationLocation": "/usr/etc/router-matchers.json",
+    "routeConfigurationLocation": "/usr/local/etc/router/routes.json",
 
-    "overrideConfigurationLocation": "/usr/etc/router.json"
+    "overrideConfigurationLocation": "/usr/local/etc/router/config.json"
 }
