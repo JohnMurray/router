@@ -2,12 +2,15 @@ package io.johnmurray.router.config
 
 import akka.actor.{Cancellable, Actor}
 import akka.event.Logging
+import io.johnmurray.router.route.{RouteMatcher, Route}
+import java.nio.file.{Files, Paths}
 import org.parboiled.errors.ParsingException
 import spray.json.JsonParser
 import RouterJsonProtocols._
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
-import io.johnmurray.router.route.Route
+import spray.json.DefaultJsonProtocol._
+
 
 /**
  * Author: John Murray <jmurray@appnexus.com>
@@ -25,7 +28,7 @@ class ConfigLoaderActor extends Actor {
    import ConfigLoaderActor._
 
    val log = Logging(context.system, this)
-   var routeSchedule : Option[Cancellable] = None
+   var routeSchedule: Option[Cancellable] = None
 
    def receive = {
       case LoadConfig =>
@@ -48,6 +51,8 @@ class ConfigLoaderActor extends Actor {
 
       case ReLoadRoutes =>
          log.info("Loading routes")
+         val routes = loadRouteConfig(ConfigStore.config)
+         ConfigStore.routeMatcher = RouteMatcher(routes.toSet)
 
       case any =>
          log.warning(s"Unknown message received to config loader actor: $any")
@@ -58,14 +63,28 @@ class ConfigLoaderActor extends Actor {
     * Given the base-config, find the routes file, parse it, and return a list of
     * route-objects.
     *
-    * @param baseConfig The base-config containing the locaiton of the route-config
+    * @param baseConfig The base-config containing the location of the route-config
     * @return           A list of Route objects
     */
    def loadRouteConfig(baseConfig: Config): List[Route] = {
-      // TODO: Implement method
-      Nil
+      val loc = baseConfig.routeConfigurationLocation
+      if (Files.exists(Paths.get(loc))) {
+         try {
+            val routeConfigContent = scala.io.Source.fromFile(Paths.get(loc).toUri).mkString
+            JsonParser(routeConfigContent).convertTo[List[Route]]
+         } catch {
+            case ex: ParsingException =>
+               log.warning(s"Could not parse router config: ${ex.getMessage}", ex)
+               Nil
+            case t: Throwable =>
+               log.warning(s"Could not load router config: ${t.getMessage}", t)
+               Nil
+         }
+      } else {
+         log.warning(s"No route file found at '$loc'")
+         Nil
+      }
    }
-
 
 
    /**
@@ -80,20 +99,21 @@ class ConfigLoaderActor extends Actor {
 
       var config = JsonParser(configContent).convertTo[Config]
 
-      getOverrideConfigLocation(config).foreach { path =>
-         try {
-            val overrideConfigContent = scala.io.Source.fromFile(path).mkString
-            val overrideConfig = JsonParser(overrideConfigContent).convertTo[OverrideConfig]
-            config = config.merge(overrideConfig)
-         }
-         catch {
-            case ex: ParsingException => {
-               log.warning(s"Could not parse override config: ${ex.getMessage}")
+      getOverrideConfigLocation(config).foreach {
+         path =>
+            try {
+               val overrideConfigContent = scala.io.Source.fromFile(path).mkString
+               val overrideConfig = JsonParser(overrideConfigContent).convertTo[OverrideConfig]
+               config = config.merge(overrideConfig)
             }
-            case ex: Throwable => {
-               log.warning(s"Could not load override config: ${ex.getMessage}")
+            catch {
+               case ex: ParsingException => {
+                  log.warning(s"Could not parse override config: ${ex.getMessage}")
+               }
+               case ex: Throwable => {
+                  log.warning(s"Could not load override config: ${ex.getMessage}")
+               }
             }
-         }
       }
 
       config
@@ -123,8 +143,13 @@ class ConfigLoaderActor extends Actor {
 
 
 object ConfigLoaderActor {
+
    case object ConfigLoaded
+
    case object ConfigLoadFailed
+
    case object LoadConfig
+
    case object ReLoadRoutes
+
 }

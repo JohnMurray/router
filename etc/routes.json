@@ -1,0 +1,8 @@
+[
+  {
+    "matchPath": "/test-path",
+    "destinationHost": "some.remote.host",
+    "destinationPath": "/remote-host-path",
+    "destinationPort": 80
+  }
+]

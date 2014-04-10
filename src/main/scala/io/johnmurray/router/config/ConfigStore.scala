@@ -1,6 +1,6 @@
 package io.johnmurray.router.config
 
-import io.johnmurray.router.route.Route
+import io.johnmurray.router.route.{RouteMatcher, Route}
 
 /**
  * Author: John Murray <jmurray@appnexus.com>
@@ -10,7 +10,7 @@ import io.johnmurray.router.route.Route
  */
 object ConfigStore {
 
-   var _config : Option[Config] = None
+   private var _config : Option[Config] = None
 
    def config_=(config: Config) : Unit = {
       _config = Some(config)
@@ -27,11 +27,11 @@ object ConfigStore {
 
 
 
-   var _routes : List[Route] = Nil
+   private var _routeMatcher : RouteMatcher = RouteMatcher(Set.empty)
 
-   def routes_=(routes: List[Route]) : Unit = {
-      _routes = routes
+   def routeMatcher_=(routeMatcher: RouteMatcher) : Unit = {
+      _routeMatcher = routeMatcher
    }
 
-   def routes : List[Route] = _routes
+   def routeMatcher : RouteMatcher = _routeMatcher
 }
