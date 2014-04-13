@@ -13,11 +13,12 @@ object Dependencies {
    val sprayV = "1.3.1"
 
    val appDependencies = Seq(
-      "com.typesafe.akka" %% "akka-actor"   % akkaV,
-      "com.typesafe.akka" %% "akka-testkit" % akkaV     % "test",
-      "io.spray"          %  "spray-can"    % sprayV,
-      "io.spray"          %% "spray-json"   % "1.2.5",
-      "org.specs2"        %% "specs2"       % "2.3.10"  % "test"
+      "com.typesafe.akka"  %% "akka-actor"    % akkaV,
+      "com.typesafe.akka"  %% "akka-testkit"  % akkaV     % "test",
+      "io.spray"           %  "spray-can"     % sprayV,
+      "io.spray"           %  "spray-client"  % sprayV,
+      "io.spray"           %% "spray-json"    % "1.2.5",
+      "org.specs2"         %% "specs2"        % "2.3.10"  % "test"
    )
 }
 
