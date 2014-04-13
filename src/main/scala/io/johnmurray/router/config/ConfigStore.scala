@@ -1,12 +1,15 @@
 package io.johnmurray.router.config
 
-import io.johnmurray.router.route.{RouteMatcher, Route}
+import io.johnmurray.router.route.RouteMatcher
 
 /**
  * Author: John Murray <jmurray@appnexus.com>
  * Date:   3/26/14
  *
  * The singleton (object) that holds the global config
+ *
+ * TODO: really need to get rid of this somehow or another. I just hate the idea of
+ *       global state and what not.
  */
 object ConfigStore {
 

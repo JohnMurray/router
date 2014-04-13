@@ -27,27 +27,28 @@ class HttpHandler extends Actor {
       IO(Http)(context.system) ! Http.Bind(self, interface = "localhost", port = ConfigStore.config.port)
    }
 
-   override def postStop() : Unit = {
+   override def postStop(): Unit = {
       IO(Http)(context.system) ! Http.Unbind
    }
 
    def receive = {
-      case HttpRequest(GET, Uri.Path("/ping"), _, _, _) =>
+      case HttpRequest(GET, Uri.Path("/ping"), _, _, _) => {
          sender ! HttpResponse(entity = "PONG")
-
-      case Http.Connected(_, _) =>
+      }
+      case Http.Connected(_, _)                         => {
          sender ! Http.Register(self)
-
-      case Http.PeerClosed =>
-
-      case Http.Bound(address) =>
+      }
+      case Http.PeerClosed                              => {
+      }
+      case Http.Bound(address)                          => {
          log.info(s"Bound at $address")
-
-      case Http.CommandFailed(failureMessage) =>
+      }
+      case Http.CommandFailed(failureMessage)           => {
          log.error(s"Failed to bind: $failureMessage")
-
-      case unknown =>
+      }
+      case unknown                                      => {
          log.warning(s"Unknown message received $unknown")
+      }
    }
 
 }

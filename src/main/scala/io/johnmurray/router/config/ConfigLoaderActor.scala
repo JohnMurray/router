@@ -2,14 +2,20 @@ package io.johnmurray.router.config
 
 import akka.actor.{Cancellable, Actor}
 import akka.event.Logging
-import io.johnmurray.router.route.{RouteMatcher, Route}
+
+import io.johnmurray.router.route.RouteMatcher
+
 import java.nio.file.{Files, Paths}
+
 import org.parboiled.errors.ParsingException
-import spray.json.JsonParser
+
 import RouterJsonProtocols._
+
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
+
 import spray.json.DefaultJsonProtocol._
+import spray.json.JsonParser
 
 
 /**
@@ -76,7 +82,7 @@ class ConfigLoaderActor extends Actor {
             case ex: ParsingException =>
                log.warning(s"Could not parse router config: ${ex.getMessage}", ex)
                Nil
-            case t: Throwable =>
+            case t: Throwable         =>
                log.warning(s"Could not load router config: ${t.getMessage}", t)
                Nil
          }
@@ -99,21 +105,20 @@ class ConfigLoaderActor extends Actor {
 
       var config = JsonParser(configContent).convertTo[Config]
 
-      getOverrideConfigLocation(config).foreach {
-         path =>
-            try {
-               val overrideConfigContent = scala.io.Source.fromFile(path).mkString
-               val overrideConfig = JsonParser(overrideConfigContent).convertTo[OverrideConfig]
-               config = config.merge(overrideConfig)
+      getOverrideConfigLocation(config).foreach { path =>
+         try {
+            val overrideConfigContent = scala.io.Source.fromFile(path).mkString
+            val overrideConfig = JsonParser(overrideConfigContent).convertTo[OverrideConfig]
+            config = config.merge(overrideConfig)
+         }
+         catch {
+            case ex: ParsingException => {
+               log.warning(s"Could not parse override config: ${ex.getMessage}")
             }
-            catch {
-               case ex: ParsingException => {
-                  log.warning(s"Could not parse override config: ${ex.getMessage}")
-               }
-               case ex: Throwable => {
-                  log.warning(s"Could not load override config: ${ex.getMessage}")
-               }
+            case ex: Throwable        => {
+               log.warning(s"Could not load override config: ${ex.getMessage}")
             }
+         }
       }
 
       config
@@ -142,6 +147,10 @@ class ConfigLoaderActor extends Actor {
 }
 
 
+/**
+ * A bunch of messages that the config load actor should be able to receive
+ * and understand.
+ */
 object ConfigLoaderActor {
 
    case object ConfigLoaded

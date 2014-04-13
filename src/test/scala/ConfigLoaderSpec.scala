@@ -1,10 +1,9 @@
 import akka.actor.{Cancellable, ActorSystem}
 import akka.testkit._
 
-import io.johnmurray.router.config.{ConfigStore, ConfigLoaderActor}
+import io.johnmurray.router.config.{Route, ConfigStore, ConfigLoaderActor}
 
 import io.johnmurray.router.config.ConfigLoaderActor.{ReLoadRoutes, LoadConfig}
-import io.johnmurray.router.route.Route
 import org.specs2.mutable.Specification
 
 /**

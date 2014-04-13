@@ -1,4 +1,4 @@
-package io.johnmurray.router.route
+package io.johnmurray.router.config
 
 /**
  * Author: John Murray <jmurray@appnexus.com>

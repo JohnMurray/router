@@ -1,4 +1,5 @@
-import io.johnmurray.router.route.{Route, RouteMatcher}
+import io.johnmurray.router.config.Route
+import io.johnmurray.router.route.RouteMatcher
 import org.specs2.mutable.Specification
 
 /**

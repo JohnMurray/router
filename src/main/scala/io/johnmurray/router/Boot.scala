@@ -28,12 +28,13 @@ object Boot extends App {
    val configLoadResult = Await.result(
       Patterns.ask(configLoader, LoadConfig, 500.milliseconds),
       500.milliseconds)
+
    configLoadResult match {
       case ConfigLoadFailed => {
          println("Could not load the configuration")
          sys.exit(1)
       }
-      case _ =>
+      case _                =>
    }
 
 

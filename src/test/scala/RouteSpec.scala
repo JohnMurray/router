@@ -1,4 +1,4 @@
-import io.johnmurray.router.route.Route
+import io.johnmurray.router.config.Route
 import org.specs2.mutable.Specification
 
 /**

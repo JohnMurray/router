@@ -10,7 +10,7 @@ case class Config(port: Int,
                   routeConfigurationLocation: String,
                   overrideConfigurationLocation: String) {
 
-   def merge(other: OverrideConfig) : Config = {
+   def merge(other: OverrideConfig): Config = {
       copy(port = other.port.getOrElse(port),
            routeConfigurationLocation = other.routeConfigurationLocation.getOrElse(routeConfigurationLocation))
    }

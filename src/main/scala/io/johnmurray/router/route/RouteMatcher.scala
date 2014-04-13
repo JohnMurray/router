@@ -1,6 +1,7 @@
 package io.johnmurray.router.route
 
 import scala.collection.concurrent.TrieMap
+import io.johnmurray.router.config.Route
 
 /**
  * Author: John Murray <jmurray@appnexus.com>
