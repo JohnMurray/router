@@ -33,21 +33,22 @@ class HttpHandler extends Actor {
    }
 
    def receive = {
-      case HttpRequest(GET, Uri.Path("/ping"), _, _, _) => {
+      case req: HttpRequest                   => {
+         log.info(s"Request: $req")
          sender ! HttpResponse(entity = "PONG")
       }
-      case Http.Connected(_, _)                         => {
+      case Http.Connected(_, _)               => {
          sender ! Http.Register(self)
       }
-      case Http.PeerClosed                              => {
+      case Http.PeerClosed                    => {
       }
-      case Http.Bound(address)                          => {
+      case Http.Bound(address)                => {
          log.info(s"Bound at $address")
       }
-      case Http.CommandFailed(failureMessage)           => {
+      case Http.CommandFailed(failureMessage) => {
          log.error(s"Failed to bind: $failureMessage")
       }
-      case unknown                                      => {
+      case unknown                            => {
          log.warning(s"Unknown message received $unknown")
       }
    }
