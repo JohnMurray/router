@@ -3,11 +3,12 @@ package io.johnmurray.router.handler
 import akka.actor.Actor
 import akka.event.Logging
 import akka.io.IO
-import spray.can.Http
 
+import io.johnmurray.router.config.ConfigStore
+
+import spray.can.Http
 import spray.http.{HttpResponse, Uri, HttpRequest}
 import spray.http.HttpMethods._
-import io.johnmurray.router.config.ConfigStore
 
 /**
  * Author: John Murray <jmurray@appnexus.com>

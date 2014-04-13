@@ -13,9 +13,16 @@ import io.johnmurray.router.config.Route
  */
 object RouterJsonProtocols {
 
+   /*
+    * Config formatters
+    */
    implicit val configFormat = jsonFormat3(Config)
    implicit val overrideConfigFormat = jsonFormat2(OverrideConfig)
 
+
+   /*
+    * Route formatters
+    */
    implicit val routFormat = jsonFormat4(Route.apply)
 
 }

@@ -5,10 +5,10 @@ import akka.pattern.Patterns
 
 import io.johnmurray.router.config.ConfigLoaderActor
 import ConfigLoaderActor._
+import io.johnmurray.router.handler.HttpHandler
 
 import scala.concurrent.duration._
 import scala.concurrent.Await
-import io.johnmurray.router.handler.HttpHandler
 
 /**
  * Author: John Murray <jmurray@appnexus.com>
