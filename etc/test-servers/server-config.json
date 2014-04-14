@@ -1,0 +1,8 @@
+{
+  "ports": {
+    "simple-response-server": 8000,
+    "delayed-simple-server": 8001,
+    "simple-large-response-server": 8002,
+    "chunked-response-server": 8003
+  }
+}
