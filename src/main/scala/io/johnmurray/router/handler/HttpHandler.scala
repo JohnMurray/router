@@ -33,22 +33,26 @@ class HttpHandler extends Actor {
    }
 
    def receive = {
-      case req: HttpRequest                   => {
-         log.info(s"Request: $req")
+      case HttpRequest(method, Uri.Path(path: String), headers, entity, protocol) => {
+         val route = ConfigStore.routeMatcher.find(path)
+         log.info(s"Request: $method  $path  $protocol")
+         headers.foreach(h => log.info(s"Request: $h"))
+         log.info(s"Request: $entity")
+         log.info(s"Route found?: $route")
          sender ! HttpResponse(entity = "PONG")
       }
-      case Http.Connected(_, _)               => {
+      case Http.Connected(_, _)                                                   => {
          sender ! Http.Register(self)
       }
-      case Http.PeerClosed                    => {
+      case Http.PeerClosed                                                        => {
       }
-      case Http.Bound(address)                => {
+      case Http.Bound(address)                                                    => {
          log.info(s"Bound at $address")
       }
-      case Http.CommandFailed(failureMessage) => {
+      case Http.CommandFailed(failureMessage)                                     => {
          log.error(s"Failed to bind: $failureMessage")
       }
-      case unknown                            => {
+      case unknown                                                                => {
          log.warning(s"Unknown message received $unknown")
       }
    }
