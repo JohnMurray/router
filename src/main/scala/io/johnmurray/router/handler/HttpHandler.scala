@@ -7,8 +7,11 @@ import akka.io.IO
 import io.johnmurray.router.config.ConfigStore
 
 import spray.can.Http
-import spray.http.{HttpResponse, Uri, HttpRequest}
+import spray.http._
 import spray.http.HttpMethods._
+import spray.http.HttpRequest
+import spray.http.HttpResponse
+import spray.http.HttpHeaders.RawHeader
 
 /**
  * Author: John Murray <jmurray@appnexus.com>
@@ -35,11 +38,19 @@ class HttpHandler extends Actor {
    def receive = {
       case HttpRequest(method, Uri.Path(path: String), headers, entity, protocol) => {
          val route = ConfigStore.routeMatcher.find(path)
+
          log.info(s"Request: $method  $path  $protocol")
-         headers.foreach(h => log.info(s"Request: $h"))
          log.info(s"Request: $entity")
-         log.info(s"Route found?: $route")
-         sender ! HttpResponse(entity = "PONG")
+
+         route match {
+            case Some(r) => {
+               log.info(s"route matched: $r")
+               sender ! Http.Abort
+            }
+            case None    => {
+               sender ! noRouteFound(path)
+            }
+         }
       }
       case Http.Connected(_, _)                                                   => {
          sender ! Http.Register(self)
@@ -55,6 +66,14 @@ class HttpHandler extends Actor {
       case unknown                                                                => {
          log.warning(s"Unknown message received $unknown")
       }
+   }
+
+
+   def noRouteFound(path: String): HttpResponse = {
+      HttpResponse(
+         status = StatusCodes.NotFound,
+         headers = List(RawHeader("X-Not-Found-Reason", s"Route '$path' not found"))
+      )
    }
 
 }
