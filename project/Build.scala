@@ -1,6 +1,6 @@
 import sbt._
 import Keys._
-
+import spray.revolver.RevolverPlugin._
 
 object Resolvers {
 
@@ -40,7 +40,7 @@ object BuildSettings {
       resolvers           += sprayResolver,
       libraryDependencies := appDependencies,
       scalacOptions       := buildScalaOptions
-   )
+   ) ++ Revolver.settings
 }
 
 object ApplicationBuild extends Build {
