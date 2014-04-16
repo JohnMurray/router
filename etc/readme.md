@@ -4,12 +4,12 @@ This folder contains what you need to get up and running with a dev
 environment. The `init.sh` file will attempt to setup your local environment
 and get you jump-started. Once you are setup, you can start a bunch
 of test servers (as specified in the deployed default configuration)
-but running `run.sh`. 
+but running `run-test-servers.sh`. 
 
 Of course you are more than welcome to setup your own dev environment if you
 would like to test something more specific. This is just to get you jump-started.
-Feel free to peruse the `init.sh` and `run.sh` to see what they are doing
-exactly.
+Feel free to peruse the `init.sh` and `run-test-servers.sh` to see what 
+they are doing exactly.
 
 I will note that the test servers have a dependency on NodeJS (read more
 below).
