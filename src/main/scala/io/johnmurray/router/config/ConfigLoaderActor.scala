@@ -36,6 +36,8 @@ class ConfigLoaderActor extends Actor {
    val log = Logging(context.system, this)
    var routeSchedule: Option[Cancellable] = None
 
+   val reloadInterval = 30.seconds
+
    def receive = {
       case LoadConfig =>
          log.info("Loading app-configuration")
@@ -44,9 +46,9 @@ class ConfigLoaderActor extends Actor {
             sender ! ConfigLoaded
 
             if (routeSchedule.isEmpty || routeSchedule.exists(_.isCancelled)) {
-               log.info("Scheduled route-loading")
+               log.info(s"Scheduled route-loading (interval: $reloadInterval)")
                routeSchedule = Some(
-                  context.system.scheduler.schedule(0.seconds, 30.seconds, self, ReLoadRoutes))
+                  context.system.scheduler.schedule(0.seconds, reloadInterval, self, ReLoadRoutes))
             }
          }
          catch {
@@ -56,7 +58,6 @@ class ConfigLoaderActor extends Actor {
          }
 
       case ReLoadRoutes =>
-         log.info("Loading routes")
          val routes = loadRouteConfig(ConfigStore.config)
          ConfigStore.routeMatcher = RouteMatcher(routes.toSet)
 
